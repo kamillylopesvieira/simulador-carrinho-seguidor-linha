@@ -4,9 +4,12 @@ Um simulador gráfico bidimensional em **Python** que modela o comportamento de 
 
 ---
 
-## 📸 Demonstração
+## 🎬 Demonstração da Simulação
 
-![Demonstração do Simulador](demons-simulador.gif)
+| Interface Tkinter | Interface Pygame |
+| :---: | :---: |
+| ![Simulação no Tkinter](simulador-tkinter.gif) | ![Simulação no Pygame](simulador-pygame.gif) |
+| *Execução utilizando a interface nativa Tkinter* | *Execução utilizando a biblioteca Pygame* |
 
 ---
 
