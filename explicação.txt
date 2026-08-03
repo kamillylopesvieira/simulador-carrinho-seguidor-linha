@@ -1,0 +1,72 @@
+
+                CARRINHO SIMULADOR SEGUIDOR DE LINHA
+
+
+- Resumo do sistema
+
+ O sistema consiste em um simulador gráfico bidimensional de um robô móvel 
+seguidor de linha, desenvolvido em Python utilizando uma arquitetura unificada 
+que opera com as bibliotecas Tkinter e Pygame. O software simula uma malha de 
+controle fechada em um canvas de 1000x1000 pixels, permitindo ao usuário 
+selecionar a interface gráfica desejada e o circuito poligonal de testes, que 
+foi otimizado para os formatos Quadrado e Hexagonal. Agindo de forma parecida a 
+um robô real controlado por microcontrolador, o carrinho utiliza sensores 
+ópticos virtuais nas extremidades de seu eixo para rastrear a pista preta sobre 
+o fundo branco e ajustar sua direção de maneira autônoma. O programa conta 
+ainda com um limitador seguro de velocidade, contagem de voltas por 
+aproximação geométrica, reset de posição e rastro persistente do trajeto.
+
+
+- Descrição das classes
+
+ > Pista: Funciona como o modelo geométrico e físico do ambiente, sendo a 
+ classe responsável por calcular e armazenar os segmentos de reta que formam os 
+ circuitos. Ela implementa um método estrito de varredura de pixel que checa a 
+ distância analítica do robô até as retas, devolvendo um valor booleano toda 
+ vez que uma coordenada coincide com a espessura de 3 pixels da linha preta.
+
+ > EixoCarrinho: Modela a estrutura física e mecânica do robô, definindo o 
+ segmento de reta rígido de 15 pixels de comprimento. Utilizando equações 
+ trigonométricas baseadas no ângulo atual do chassi, esta classe calcula em 
+ tempo real as coordenadas X e Y das extremidades esquerda e direita (sensores) 
+ e do ponto central (pivô), aplicando os deslocamentos angulares de rotação.
+
+ > Carrinho: Centraliza a inteligência artificial, a tomada de decisões e as 
+ regras de negócio do veículo. Esta classe processa os dados captados pelo eixo, 
+ dita o comportamento dos motores para correção de curso, gerencia a odometria 
+ para validação e contagem de voltas completadas e comanda o reset do robô.
+
+ > AppTkinter: Implementa a interface gráfica voltada para o painel de controle, 
+ gerenciando botões de execução, caixas de seleção de circuitos e sliders de 
+ velocidade, atualizando a física e o rastro de forma assíncrona no Canvas.
+
+ > AmbientePygame: Atua como o motor gráfico focado em telemetria, rodando um 
+ loop de renderização a 60 FPS com gerenciamento de menu inicial por cliques, 
+ captação de comandos de velocidade pelo teclado e um HUD que exibe o tempo 
+ decorrido, taxa de quadros, contador de voltas e multiplicador de velocidade.
+
+
+- Lógica de movimentação
+
+A locomoção do robô baseia-se em um modelo de correção angular contínua por 
+ponto flutuante. O sistema projeta matematicamente a posição futura do eixo no 
+próximo frame e verifica o contraste entre o fundo branco e a linha preta da 
+pista. A tomada de decisão ocorre por uma estrutura condicional (if/elif/else):
+
+ - Se ambos os sensores estão fora da linha, significa que a pista está passando 
+ exatamente pelo meio do chassi. O robô entende que está centralizado e avança 
+ em linha reta com deslocamento linear constante;
+
+ - Se apenas o sensor esquerdo detecta a linha preta, o robô identifica que está 
+ escapando para a direita. O sistema trava a ponta esquerda e aplica uma 
+ rotação angular para a esquerda para trazer o bico do veículo de volta ao eixo;
+
+ - Se apenas o sensor direito detecta a linha preta, o sistema faz o oposto, 
+ travando a extremidade direita e rotacionando o corpo para a direita;
+
+ - Se ambos os sensores detectam a linha simultaneamente (comum em quinas vivas 
+ dos polígonos), o carrinho aplica uma velocidade reversa de recuo (marcha ré) 
+ e força um giro com base no histórico do seu último sentido de rotação salvo, 
+ quebrando o ponto de simetria para evitar travamentos mecânicos.
+
+
